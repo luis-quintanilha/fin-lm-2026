@@ -111,8 +111,15 @@ section{padding:46px 0;border-top:1px solid var(--line)}
 .gargalo p strong{color:var(--ink-2)}
 
 /* health */
-.hl-track{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
-.hl{border-radius:12px;padding:14px 14px 16px;border:1px solid var(--line)}
+.hl-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:13px}
+.hl-range{font-size:11.5px;font-weight:600;color:var(--ink-4);text-transform:uppercase;letter-spacing:.08em}
+.hl-nav{display:flex;gap:7px}
+.hl-nav button{width:31px;height:31px;border-radius:50%;border:1px solid var(--line-2);background:var(--bg-card);color:var(--ink-2);font-size:12px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Geist';transition:border-color .18s,color .18s,opacity .18s}
+.hl-nav button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.hl-nav button:disabled{opacity:.3;cursor:not-allowed}
+.hl-view{overflow:hidden;margin-bottom:18px}
+.hl-track{display:flex;gap:10px;transition:transform .45s cubic-bezier(.2,.7,.2,1);will-change:transform}
+.hl{flex:0 0 auto;border-radius:12px;padding:14px 14px 16px;border:1px solid var(--line)}
 .hl.green{background:#E9F6F0;border-color:#BFE6D6}
 .hl.blue{background:#EAF0FC;border-color:#C5D4F4}
 .hl.amber{background:#FBF1E2;border-color:#F0D9B4}
@@ -197,7 +204,6 @@ footer{border-top:1px solid var(--line);padding:30px 0 50px;font-size:12px;color
   .res-grid,.cc-grid,.kpi-grid{grid-template-columns:1fr}
   .buckets{grid-template-columns:1fr}
   .plan{grid-template-columns:1fr 1fr}
-  .hl-track{grid-template-columns:1fr 1fr 1fr}
   .sb{grid-template-columns:110px 1fr auto;gap:9px}
   .sb .nm small{display:none}
   .wrap{padding:0 18px}
@@ -364,7 +370,15 @@ footer{border-top:1px solid var(--line);padding:30px 0 50px;font-size:12px;color
   <!-- 06 HEALTH -->
   <section>
     <div class="sec-h"><span class="sec-n">06</span><h2>Health Status histórico</h2></div>
-    <div class="hl-track">
+    <div class="hl-head">
+      <span class="hl-range" id="hlRange"></span>
+      <div class="hl-nav">
+        <button id="hlPrev" type="button" aria-label="Meses anteriores">◀</button>
+        <button id="hlNext" type="button" aria-label="Meses seguintes">▶</button>
+      </div>
+    </div>
+    <div class="hl-view" id="hlView">
+    <div class="hl-track" id="hlTrack">
       <div class="hl amber"><div class="m">Jan / 26</div><div class="b">Atenção</div><div class="why">Contas correntes zeradas no fim do mês, sem folga.</div></div>
       <div class="hl amber"><div class="m">Fev / 26</div><div class="b">Atenção</div><div class="why">R$ 20 em CC. Dependência total da Caixinha.</div></div>
       <div class="hl amber"><div class="m">Mar / 26</div><div class="b">Atenção</div><div class="why">Resgate de R$ 6,5k da Reserva + fatura paga com multa.</div></div>
@@ -372,6 +386,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 50px;font-size:12px;color
       <div class="hl green"><div class="m">Mai / 26</div><div class="b">Saudável</div><div class="why">Pay Yourself First, sem rotativo, fixas em dia, caixa recomposto.</div></div>
       <div class="hl green"><div class="m">Jun / 26</div><div class="b">Saudável</div><div class="why">PFL cresceu, 16/16 fixas pagas, aportes 100%, rotativo zerado.</div></div>
       <div class="hl green"><div class="m">Jul / 26</div><div class="b">Saudável</div><div class="why">PFL +R$ 7,9k, 16/16 fixas pagas, aportes 100%, cartão −R$ 5,9k.</div></div>
+    </div>
     </div>
     <div class="legend">
       <span><i style="background:#059669"></i>Saudável</span>
@@ -494,6 +509,64 @@ new Chart(document.getElementById('debtChart'), {
       x:{stacked:true,grid:{display:false},ticks:{font:{family:'Geist',size:12},color:ink2}}
     }}
 });
+
+// 06 — Health Status (carrossel, janela dos últimos meses)
+(function(){
+  const view = document.getElementById('hlView');
+  const track = document.getElementById('hlTrack');
+  const prev = document.getElementById('hlPrev');
+  const next = document.getElementById('hlNext');
+  const range = document.getElementById('hlRange');
+  if(!view || !track) return;
+  const cards = Array.from(track.children);
+  const GAP = 10;
+  let per = 6, idx = 0, atEnd = true, step = 0, first = true;
+
+  const perView = () => window.innerWidth <= 760 ? 3 : (window.innerWidth <= 1000 ? 4 : 6);
+  const maxIdx = () => Math.max(0, cards.length - per);
+
+  function render(){
+    track.style.transform = 'translateX(-' + (idx * step) + 'px)';
+    prev.disabled = idx <= 0;
+    next.disabled = idx >= maxIdx();
+    atEnd = idx >= maxIdx();
+    const a = cards[idx], b = cards[Math.min(idx + per, cards.length) - 1];
+    if(range && a && b){
+      const ta = a.querySelector('.m').textContent.trim();
+      const tb = b.querySelector('.m').textContent.trim();
+      range.textContent = (ta === tb ? ta : ta + ' — ' + tb) + ' · ' + cards.length + ' meses no histórico';
+    }
+  }
+  function layout(){
+    per = Math.min(perView(), cards.length);
+    const w = (view.clientWidth - (per - 1) * GAP) / per;
+    cards.forEach(c => { c.style.width = w + 'px'; });
+    step = w + GAP;
+    idx = atEnd ? maxIdx() : Math.min(idx, maxIdx());
+    if(first){ track.style.transition = 'none'; }
+    render();
+    if(first){ void track.offsetWidth; track.style.transition = ''; first = false; }
+  }
+  function go(d){
+    idx = Math.max(0, Math.min(idx + d, maxIdx()));
+    render();
+  }
+  prev.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+
+  let x0 = null;
+  view.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passive:true});
+  view.addEventListener('touchend', e => {
+    if(x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx) > 45) go(dx < 0 ? 1 : -1);
+    x0 = null;
+  }, {passive:true});
+
+  let t;
+  window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(layout, 120); });
+  layout();
+})();
 
 // 07 — Gastos (Mai + Jun)
 const spendData = {
