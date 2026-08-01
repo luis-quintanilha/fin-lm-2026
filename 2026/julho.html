@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finanças Casa — Jul/26</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#FAFAF7; --bg-card:#FFFFFF; --bg-subtle:#F4F2EC;
+  --ink:#14151A; --ink-2:#3D4148; --ink-3:#6B7280; --ink-4:#9CA3AF;
+  --line:#E8E5DD; --line-2:#DAD6CB;
+  --accent:#0F766E; --accent-soft:#CCE9E5;
+  --green:#059669; --red:#B91C1C; --amber:#B45309; --amber-soft:#FCD8A8; --blue:#1E40AF;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Geist',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-weight:400}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+h1,h2,h3,.fr{font-family:'Fraunces',serif}
+
+/* breadcrumb */
+.crumb{border-bottom:1px solid var(--line);background:rgba(250,250,247,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50}
+.crumb .wrap{display:flex;align-items:center;justify-content:space-between;height:54px}
+.crumb a{color:var(--ink-3);text-decoration:none;font-size:13px;font-weight:500}
+.crumb a:hover{color:var(--accent)}
+.brand{font-family:'Fraunces';font-weight:500;font-size:15px;color:var(--ink)}
+.brand em{font-style:italic;color:var(--accent)}
+.navsel{display:flex;align-items:center;gap:10px}
+select{font-family:'Geist';font-size:13px;font-weight:500;color:var(--ink-2);border:1px solid var(--line-2);background:var(--bg-card);border-radius:999px;padding:6px 12px;cursor:pointer;outline:none}
+
+/* hero */
+.hero{padding:64px 0 40px}
+.eyebrow{text-transform:uppercase;letter-spacing:.17em;font-size:11.5px;font-weight:600;color:var(--accent)}
+.flag{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;letter-spacing:.01em}
+.flag.green{background:#E4F4ED;color:var(--green)}
+.flag.blue{background:#E5ECFB;color:var(--blue)}
+.flag.amber{background:var(--amber-soft);color:var(--amber)}
+.flag .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.hero-top{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.hero-month{font-family:'Fraunces';font-size:14px;color:var(--ink-3);letter-spacing:.02em}
+h1.head{font-weight:300;font-size:clamp(34px,5.4vw,60px);line-height:1.04;letter-spacing:-.03em;margin:8px 0 22px;max-width:16ch}
+h1.head em{font-style:italic;font-weight:400;color:var(--accent)}
+.sub{font-size:13px;color:var(--ink-4);margin-bottom:30px}
+.lede{max-width:64ch;font-size:16.5px;color:var(--ink-2);line-height:1.65}
+.lede p+p{margin-top:16px}
+.lede strong{color:var(--ink);font-weight:600}
+
+/* section heading */
+section{padding:46px 0;border-top:1px solid var(--line)}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:28px}
+.sec-n{font-family:'Fraunces';font-style:italic;font-size:15px;color:var(--ink-4)}
+.sec-h h2{font-weight:500;font-size:24px;letter-spacing:-.02em}
+
+/* KPI cards */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.kpi-main{grid-column:1/-1;background:var(--ink);color:#fff;border-radius:18px;padding:34px 36px;position:relative;overflow:hidden}
+.kpi-main .lbl{text-transform:uppercase;letter-spacing:.15em;font-size:11px;font-weight:600;color:rgba(255,255,255,.62)}
+.kpi-main .val{font-family:'Fraunces';font-weight:400;font-size:clamp(40px,6vw,58px);letter-spacing:-.03em;margin:10px 0 4px}
+.kpi-main .delta{font-size:14px;font-weight:500;color:#7DDFCF}
+.kpi-main .note{margin-top:16px;font-size:13.5px;color:rgba(255,255,255,.66);max-width:54ch;line-height:1.6}
+.kpi-main .note b{color:#fff;font-weight:600}
+.cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;grid-column:1/-1}
+.kc{background:var(--bg-card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px}
+.kc .lbl{font-size:11.5px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
+.kc .val{font-family:'Fraunces';font-weight:500;font-size:23px;letter-spacing:-.02em;margin:8px 0 5px}
+.kc .delta{font-size:12.5px;font-weight:600}
+.up{color:var(--green)} .down{color:var(--red)}
+.delta .ar{font-size:11px}
+
+/* charts */
+.chart-card{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;padding:22px 24px}
+.chart-box{position:relative;height:300px}
+.chart-cap{font-size:13.5px;color:var(--ink-3);margin-top:16px;line-height:1.6;max-width:74ch}
+.chart-cap strong{color:var(--ink-2);font-weight:600}
+
+/* reservas */
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.res{background:var(--bg-card);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.res-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}
+.res-name{font-family:'Fraunces';font-weight:500;font-size:17px}
+.tag{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.tag.build{background:var(--accent-soft);color:var(--accent)}
+.tag.idle{background:var(--bg-subtle);color:var(--ink-3)}
+.res-fig{display:flex;align-items:baseline;gap:8px}
+.res-cur{font-family:'Fraunces';font-weight:500;font-size:21px}
+.res-meta{font-size:13px;color:var(--ink-4)}
+.bar{height:7px;background:var(--bg-subtle);border-radius:999px;margin:13px 0 7px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.res-pct{font-size:12px;font-weight:600;color:var(--accent)}
+.res-d{font-size:11.5px;font-weight:600;color:var(--green);margin-left:8px}
+.res-c{font-size:12.5px;color:var(--ink-3);margin-top:11px;line-height:1.55}
+
+/* cartões */
+.cc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px}
+.cc{background:var(--bg-card);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.cc-name{font-family:'Fraunces';font-weight:500;font-size:18px}
+.cc-sub{font-size:12px;color:var(--ink-4);margin:2px 0 16px}
+.cc-row{display:flex;justify-content:space-between;font-size:13.5px;padding:7px 0;border-top:1px dashed var(--line)}
+.cc-row .k{color:var(--ink-3)} .cc-row .v{font-weight:600;font-variant-numeric:tabular-nums}
+.cc-row.big .v{color:var(--ink)}
+.cc-ok{font-size:11.5px;font-weight:600;color:var(--green);margin-top:12px}
+.gargalo{background:var(--bg-subtle);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.gargalo h3{font-family:'Fraunces';font-weight:500;font-size:15px;color:var(--ink-2);margin-bottom:16px}
+.timeline svg{width:100%;height:auto;display:block}
+.gargalo p{font-size:13.5px;color:var(--ink-3);margin-top:16px;line-height:1.6;max-width:78ch}
+.gargalo p strong{color:var(--ink-2)}
+
+/* health */
+.hl-track{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
+.hl{border-radius:12px;padding:14px 14px 16px;border:1px solid var(--line)}
+.hl.green{background:#E9F6F0;border-color:#BFE6D6}
+.hl.blue{background:#EAF0FC;border-color:#C5D4F4}
+.hl.amber{background:#FBF1E2;border-color:#F0D9B4}
+.hl .m{font-family:'Fraunces';font-weight:500;font-size:13px;color:var(--ink-2)}
+.hl .b{font-size:12px;font-weight:600;margin:4px 0 8px}
+.hl.green .b{color:var(--green)} .hl.blue .b{color:var(--blue)} .hl.amber .b{color:var(--amber)}
+.hl .why{font-size:11px;color:var(--ink-3);line-height:1.45}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--ink-3)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block}
+.hl-note{font-size:13.5px;color:var(--ink-3);margin-top:16px;line-height:1.6;max-width:76ch}
+.hl-note strong{color:var(--ink-2)}
+
+/* gastos */
+.tabs{display:flex;gap:7px;margin-bottom:22px;flex-wrap:wrap}
+.tab{font-size:13px;font-weight:500;padding:7px 15px;border-radius:999px;border:1px solid var(--line-2);background:var(--bg-card);color:var(--ink-3);cursor:pointer;font-family:'Geist'}
+.tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tab:disabled{opacity:.45;cursor:not-allowed}
+.spend-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px}
+.spend-tot{font-family:'Fraunces';font-weight:500;font-size:26px;letter-spacing:-.02em}
+.spend-lbl{font-size:12px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.08em}
+.bars{display:flex;flex-direction:column;gap:3px;margin-bottom:26px}
+.sb{display:grid;grid-template-columns:160px 1fr auto;align-items:center;gap:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.sb .nm{font-size:13.5px;font-weight:500}
+.sb .nm small{display:block;font-size:11px;font-weight:400;color:var(--ink-4);margin-top:1px}
+.sb-bar{height:9px;border-radius:999px;background:var(--bg-subtle);overflow:hidden}
+.sb-bar i{display:block;height:100%;border-radius:999px}
+.sb .amt{font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums;text-align:right;min-width:88px}
+.ess i{background:var(--ink-2)} .life i{background:var(--accent)} .oth i{background:var(--amber)}
+.ess .dotc{color:var(--ink-2)} .life .dotc{color:var(--accent)} .oth .dotc{color:var(--amber)}
+.buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.bk{border:1px solid var(--line);border-radius:13px;padding:17px 19px;background:var(--bg-card)}
+.bk .h{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.bk .h i{width:9px;height:9px;border-radius:3px}
+.bk .pc{font-family:'Fraunces';font-weight:500;font-size:25px;margin:9px 0 2px;letter-spacing:-.02em}
+.bk .ab{font-size:12.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.comment{font-size:14px;color:var(--ink-2);line-height:1.65;padding:15px 18px;background:var(--bg-subtle);border-radius:12px;border-left:3px solid var(--accent)}
+.comment+.comment{margin-top:12px}
+.comment b{font-weight:600;color:var(--ink)}
+.pending{font-size:13.5px;color:var(--ink-4);padding:24px;text-align:center;background:var(--bg-subtle);border-radius:12px;font-style:italic}
+
+/* movimentos */
+.mv{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
+.mv .l .t{font-size:14px;font-weight:500}
+.mv .l .d{font-size:12px;color:var(--ink-4);margin-top:1px}
+.mv .v{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mv .v.in{color:var(--green)} .mv .v.out{color:var(--ink-2)} .mv .v.neu{color:var(--ink-4)}
+.mv-note{font-size:13.5px;color:var(--ink-3);margin-top:18px;line-height:1.6;max-width:78ch}
+.mv-note strong{color:var(--ink-2)}
+.pv{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:#E4F4ED;color:var(--green);letter-spacing:.04em;white-space:nowrap}
+.bk .dl{font-size:11.5px;font-weight:600;margin-top:4px}
+
+/* plano */
+.plan{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.ph{border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--bg-card);position:relative}
+.ph.here{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.ph .per{font-size:11.5px;color:var(--ink-4);font-weight:500}
+.ph .nm{font-family:'Fraunces';font-weight:500;font-size:16px;margin:5px 0 10px;line-height:1.2}
+.ph .ap{font-family:'Fraunces';font-weight:500;font-size:21px;color:var(--accent)}
+.ph .apl{font-size:11.5px;color:var(--ink-4)}
+.here-tag{position:absolute;top:-10px;left:16px;background:var(--accent);color:#fff;font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:999px;letter-spacing:.02em}
+.plan-note{font-size:13.5px;color:var(--ink-3);margin-top:18px;line-height:1.6;max-width:80ch}
+.plan-note strong{color:var(--ink-2)}
+
+/* inconsistências */
+.inc{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.inc .pill{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;margin-top:1px}
+.inc .pill.ok{background:#E4F4ED;color:var(--green)}
+.inc .pill.at{background:var(--amber-soft);color:var(--amber)}
+.inc .pill.inf{background:#E5ECFB;color:var(--blue)}
+.inc .tx{font-size:13.5px;color:var(--ink-2);line-height:1.55}
+.inc .tx b{font-weight:600;color:var(--ink)}
+
+footer{border-top:1px solid var(--line);padding:30px 0 50px;font-size:12px;color:var(--ink-4)}
+
+.reveal{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.r1{animation-delay:.05s}.r2{animation-delay:.13s}.r3{animation-delay:.21s}.r4{animation-delay:.29s}
+
+@media(max-width:760px){
+  .cards4{grid-template-columns:1fr 1fr}
+  .res-grid,.cc-grid,.kpi-grid{grid-template-columns:1fr}
+  .buckets{grid-template-columns:1fr}
+  .plan{grid-template-columns:1fr 1fr}
+  .hl-track{grid-template-columns:1fr 1fr 1fr}
+  .sb{grid-template-columns:110px 1fr auto;gap:9px}
+  .sb .nm small{display:none}
+  .wrap{padding:0 18px}
+}
+</style>
+</head>
+<body>
+
+<div class="crumb"><div class="wrap">
+  <span class="brand">Finanças Casa · <em>Luís &amp; Mari</em></span>
+  <div class="navsel">
+    <label for="mo" style="font-size:12px;color:var(--ink-4)">Mês:</label>
+    <select id="mo" onchange="if(this.value)location.href=this.value">
+      <option value="">Jul / 26 (atual)</option>
+      <option value="junho.html">Jun / 26</option>
+      <option value="maio.html">Mai / 26</option>
+      <option value="abril.html">Abr / 26</option>
+    </select>
+  </div>
+</div></div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-top reveal r1">
+      <span class="hero-month num">Jul / 26 · Mês 2</span>
+      <span class="flag green"><span class="dot"></span>Saudável</span>
+    </div>
+    <div class="eyebrow reveal r1">Fechamento Mensal</div>
+    <h1 class="head reveal r2">O mês em que a dívida <em>cedeu</em>.</h1>
+    <div class="sub reveal r2">Snapshot atualizado em 1º de agosto de 2026</div>
+    <div class="lede reveal r3">
+      <p>Julho foi o melhor mês do plano até aqui, e por um motivo específico: <strong>a dívida caiu R$ 7,5 mil</strong>. O PFL saltou de −R$ 78,5k pra <strong>−R$ 70,6k</strong>, quase o dobro do avanço de junho — e desta vez a cripto não teve nada a ver com isso (+R$ 101 no mês). O ganho foi inteiramente operacional. Três movimentos explicam: o bônus de R$ 3.586 da Mari zerou a fatura dela, o Luís antecipou a fatura de agosto em 25/07, e a parcela do Empréstimo Mãe finalmente puxou o saldo <strong>abaixo de R$ 40k</strong> pela primeira vez. Só a dívida de cartão encolheu R$ 5,9 mil.</p>
+      <p>O consumo subiu 14% (R$ 18,1k → <strong>R$ 20,6k</strong>), mas vale olhar de onde: <strong>o Lifestyle ficou parado em +0,1%</strong>. Toda a alta veio dos Essenciais (+50%), e dentro deles, de duas compras que o casal escolheu fazer — o sofá de R$ 4,8 mil e a segunda fase do telhado, R$ 1,7 mil. Tirando os dois, o mês roda em ~R$ 14 mil, abaixo de junho. A cicatriz do mês é o caixa: fechou em R$ 2.853, 58% menor, e abaixo do colchão de carryover que a régua pede. Só que agosto já nasce com a fatura do Luís paga — o bloco pré-salário dele caiu de R$ 5,8k pra R$ 1,3k. Folga emprestada, não conquistada.</p>
+    </div>
+  </header>
+
+  <!-- 01 PATRIMÔNIO -->
+  <section>
+    <div class="sec-h"><span class="sec-n">01</span><h2>Patrimônio em números</h2></div>
+    <div class="kpi-grid">
+      <div class="kpi-main reveal r1">
+        <div class="lbl">Patrimônio Financeiro Líquido</div>
+        <div class="val num">−R$ 70.586</div>
+        <div class="delta num">↗ +R$ 7.945 vs Jun/26</div>
+        <div class="note">O KPI que evolui com o plano: ativos financeiros menos dívidas, <b>sem incluir casa e carro</b>. Meta de cruzar zero em <b>mar/27</b> (Mês 10). Maior salto mensal do plano — e o primeiro <b>100% operacional</b>: a cripto ficou neutra (+R$ 101).</div>
+      </div>
+      <div class="cards4">
+        <div class="kc reveal r2"><div class="lbl">Patr. Líquido Total</div><div class="val num">R$ 549.414</div><div class="delta up num"><span class="ar">▲</span> +R$ 7.945</div></div>
+        <div class="kc reveal r2"><div class="lbl">Saldo Conjunto CC</div><div class="val num">R$ 2.853</div><div class="delta down num"><span class="ar">▼</span> −R$ 3.875</div></div>
+        <div class="kc reveal r3"><div class="lbl">Total Reservas</div><div class="val num">R$ 39.932</div><div class="delta up num"><span class="ar">▲</span> +R$ 6.365</div></div>
+        <div class="kc reveal r3"><div class="lbl">Total Dívidas</div><div class="val num">R$ 113.379</div><div class="delta up num"><span class="ar">▼</span> −R$ 7.505</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 EVOLUÇÃO -->
+  <section>
+    <div class="sec-h"><span class="sec-n">02</span><h2>Evolução do patrimônio</h2></div>
+    <div class="chart-card">
+      <div class="chart-box"><canvas id="evoChart"></canvas></div>
+      <p class="chart-cap">Terceiro mês seguido de alta no <strong>PFL em teal</strong>, e o mais forte deles: +R$ 7,9k contra +R$ 4,1k em junho. A diferença é a natureza do ganho — em junho a cripto tirou R$ 3,3k do resultado operacional; em julho ela ficou neutra e o avanço veio limpo, de aporte e amortização. Faltam R$ 70,6k pra cruzar o zero em mar/27.</p>
+    </div>
+  </section>
+
+  <!-- 03 RESERVAS -->
+  <section>
+    <div class="sec-h"><span class="sec-n">03</span><h2>Reservas &amp; objetivos</h2></div>
+    <div class="res-grid">
+      <div class="res">
+        <div class="res-top"><span class="res-name">Reserva de Emergência</span><span class="tag build">Em construção</span></div>
+        <div class="res-fig"><span class="res-cur num">R$ 11.685</span><span class="res-meta num">/ R$ 40.000</span></div>
+        <div class="bar"><i style="width:29.2%"></i></div>
+        <span class="res-pct num">29,2%</span><span class="res-d num">+R$ 2.921</span>
+        <div class="res-c">R$ 2,9k a mais e a barra cruza os 29%; no ritmo atual, metade da meta em dezembro.</div>
+      </div>
+      <div class="res">
+        <div class="res-top"><span class="res-name">Kanna Fund</span><span class="tag build">Em ritmo</span></div>
+        <div class="res-fig"><span class="res-cur num">R$ 6.080</span><span class="res-meta num">/ R$ 24.000</span></div>
+        <div class="bar"><i style="width:25.3%"></i></div>
+        <span class="res-pct num">25,3%</span><span class="res-d num">+R$ 2.058</span>
+        <div class="res-c">Quarto aporte, R$ 6,1k acumulados e um quarto do caminho feito. O cofre da quitação virou uma caixinha de verdade em julho.</div>
+      </div>
+      <div class="res">
+        <div class="res-top"><span class="res-name">Viagem Europa</span><span class="tag build">Em construção</span></div>
+        <div class="res-fig"><span class="res-cur num">R$ 3.653</span><span class="res-meta num">/ R$ 13.350</span></div>
+        <div class="bar"><i style="width:27.4%"></i></div>
+        <span class="res-pct num">27,4%</span><span class="res-d num">+R$ 1.236</span>
+        <div class="res-c">R$ 1,2k constantes, 27% do pote, com a janela de fim de ano cada vez mais perto.</div>
+      </div>
+      <div class="res">
+        <div class="res-top"><span class="res-name">Médio Prazo (Vida)</span><span class="tag build">Em construção</span></div>
+        <div class="res-fig"><span class="res-cur num">R$ 4.240</span><span class="res-meta num">/ R$ 13.870 em mai/27</span></div>
+        <div class="bar"><i style="width:30.6%"></i></div>
+        <span class="res-pct num">30,6%</span><span class="res-d num">+R$ 49</span>
+        <div class="res-c">Segue em pausa até a Fase 2 (set/26); cresceu só de rendimento, R$ 49.</div>
+      </div>
+      <div class="res" style="grid-column:1/-1">
+        <div class="res-top"><span class="res-name">Longo Prazo (Cripto Binance)</span><span class="tag idle">Não iniciado</span></div>
+        <div class="res-fig"><span class="res-cur num">R$ 14.275</span><span class="res-meta num">/ R$ 23.787 em mai/27</span></div>
+        <div class="bar"><i style="width:60.0%"></i></div>
+        <span class="res-pct num">60,0%</span><span class="res-d num">+R$ 101</span>
+        <div class="res-c">BTC 12.213 + ETH 1.385 + LTC 593 + ADA 84. Mês de lado. Sem aporte ativo até a Fase 3 — essa linha é o mercado escrevendo sozinho, e em julho ele escreveu pouco.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 DÍVIDAS -->
+  <section>
+    <div class="sec-h"><span class="sec-n">04</span><h2>Curva de quitação</h2></div>
+    <div class="chart-card">
+      <div class="chart-box"><canvas id="debtChart"></canvas></div>
+      <p class="chart-cap">A primeira queda relevante da dívida total: R$ 120,9k → <strong>R$ 113,4k</strong>. Os <strong>cartões</strong> despencaram R$ 5,9k (bônus da Mari + antecipação do Luís) e o <strong>Empréstimo Mãe</strong> furou a barreira dos R$ 40k, indo pra R$ 39,0k. <strong>Kanna</strong> segue estável em R$ 60k — mas agora com R$ 6,1k já provisionados no fundo, 25% da estratégia de quitação.</p>
+    </div>
+  </section>
+
+  <!-- 05 CARTÕES -->
+  <section>
+    <div class="sec-h"><span class="sec-n">05</span><h2>Cartões — e o fim do gargalo</h2></div>
+    <div class="cc-grid">
+      <div class="cc">
+        <div class="cc-name">Luís</div>
+        <div class="cc-sub">Nubank · fecha 25 · vence 03</div>
+        <div class="cc-row big"><span class="k">Total em aberto</span><span class="v num">R$ 5.111,71</span></div>
+        <div class="cc-row"><span class="k">Fatura atual</span><span class="v num">R$ 2.374,18</span></div>
+        <div class="cc-row"><span class="k">Próximas faturas</span><span class="v num">R$ 2.737,53</span></div>
+        <div class="cc-ok">✓ Fatura de agosto (R$ 4.509,23) antecipada em 25/07 · sem rotativo</div>
+      </div>
+      <div class="cc">
+        <div class="cc-name">Mari</div>
+        <div class="cc-sub">Nubank · fecha 02 · vence 10</div>
+        <div class="cc-row big"><span class="k">Total em aberto</span><span class="v num">R$ 9.232,06</span></div>
+        <div class="cc-row"><span class="k">Fatura atual</span><span class="v num">R$ 4.219,00</span></div>
+        <div class="cc-row"><span class="k">Próximas faturas</span><span class="v num">R$ 5.013,06</span></div>
+        <div class="cc-ok">✓ Fatura de julho (R$ 4.705,44) quitada em 08/07 com o bônus</div>
+      </div>
+    </div>
+    <div class="gargalo">
+      <h3>Ciclo mensal do Luís — a antecipação como próximo passo</h3>
+      <div class="timeline">
+        <svg viewBox="0 0 720 130" xmlns="http://www.w3.org/2000/svg" font-family="Geist">
+          <line x1="40" y1="78" x2="680" y2="78" stroke="#DAD6CB" stroke-width="2"/>
+          <rect x="300" y="70" width="280" height="16" rx="8" fill="#CCE9E5" opacity=".85"/>
+          <text x="440" y="108" text-anchor="middle" font-size="12" font-weight="600" fill="#0F766E">SALÁRIO ANTES DO VENCIMENTO</text>
+          <!-- dia 25 -->
+          <circle cx="200" cy="78" r="7" fill="#0F766E"/>
+          <text x="200" y="50" text-anchor="middle" font-size="12" font-weight="600" fill="#14151A">Dia 25</text>
+          <text x="200" y="34" text-anchor="middle" font-size="11" fill="#6B7280">Fechamento</text>
+          <!-- dia 26/27 -->
+          <circle cx="300" cy="78" r="7" fill="#059669"/>
+          <text x="300" y="50" text-anchor="middle" font-size="12" font-weight="600" fill="#14151A">Dia 26/27</text>
+          <text x="300" y="34" text-anchor="middle" font-size="11" fill="#6B7280">Salário</text>
+          <!-- dia 03 -->
+          <circle cx="580" cy="78" r="7" fill="#3D4148"/>
+          <text x="580" y="50" text-anchor="middle" font-size="12" font-weight="600" fill="#14151A">Dia 03</text>
+          <text x="580" y="34" text-anchor="middle" font-size="11" fill="#6B7280">Vencimento</text>
+        </svg>
+      </div>
+      <p>Junho aposentou o gargalo movendo o fechamento pro dia <strong>25</strong> e o vencimento pro dia <strong>03</strong>, com o salário caindo no meio. Julho foi um passo além: em vez de esperar o dia 03, o Luís <strong>pagou a fatura no próprio dia 25</strong>, um dia depois do salário entrar. O efeito é direto — o bloco de fixas que vencia antes do dia 27 cai de ~R$ 5.835 pra ~R$ 1.326, e o colchão de carryover exigido despenca junto. É o que segura agosto, que abriu com só R$ 2.853 em caixa. A prática ainda está em teste: revisão prevista pra 30/set, depois de dois ciclos completos.</p>
+    </div>
+  </section>
+
+  <!-- 06 HEALTH -->
+  <section>
+    <div class="sec-h"><span class="sec-n">06</span><h2>Health Status histórico</h2></div>
+    <div class="hl-track">
+      <div class="hl amber"><div class="m">Jan / 26</div><div class="b">Atenção</div><div class="why">Contas correntes zeradas no fim do mês, sem folga.</div></div>
+      <div class="hl amber"><div class="m">Fev / 26</div><div class="b">Atenção</div><div class="why">R$ 20 em CC. Dependência total da Caixinha.</div></div>
+      <div class="hl amber"><div class="m">Mar / 26</div><div class="b">Atenção</div><div class="why">Resgate de R$ 6,5k da Reserva + fatura paga com multa.</div></div>
+      <div class="hl blue"><div class="m">Abr / 26</div><div class="b">Normal</div><div class="why">Sem rotativo (correção). Caixa baixo (R$ 899) único ponto.</div></div>
+      <div class="hl green"><div class="m">Mai / 26</div><div class="b">Saudável</div><div class="why">Pay Yourself First, sem rotativo, fixas em dia, caixa recomposto.</div></div>
+      <div class="hl green"><div class="m">Jun / 26</div><div class="b">Saudável</div><div class="why">PFL cresceu, 16/16 fixas pagas, aportes 100%, rotativo zerado.</div></div>
+      <div class="hl green"><div class="m">Jul / 26</div><div class="b">Saudável</div><div class="why">PFL +R$ 7,9k, 16/16 fixas pagas, aportes 100%, cartão −R$ 5,9k.</div></div>
+    </div>
+    <div class="legend">
+      <span><i style="background:#059669"></i>Saudável</span>
+      <span><i style="background:#1E40AF"></i>Normal</span>
+      <span><i style="background:#B45309"></i>Atenção</span>
+      <span><i style="background:#B91C1C"></i>Crítico</span>
+    </div>
+    <p class="hl-note">Três meses seguidos de <strong>Saudável</strong>. A Fase 1 entregou o que prometia: banda verde como padrão, cartão fora do rotativo, fixas nunca atrasando. Agosto fecha a fase — e é o teste de se isso é rotina ou sequência de sorte.</p>
+  </section>
+
+  <!-- 07 GASTOS -->
+  <section>
+    <div class="sec-h"><span class="sec-n">07</span><h2>Onde foi o dinheiro</h2></div>
+    <div class="tabs">
+      <button class="tab" disabled>Jan</button>
+      <button class="tab" disabled>Fev</button>
+      <button class="tab" disabled>Mar</button>
+      <button class="tab" disabled>Abr</button>
+      <button class="tab" id="tabMai" onclick="renderSpend('mai')">Mai</button>
+      <button class="tab" id="tabJun" onclick="renderSpend('jun')">Jun</button>
+      <button class="tab active" id="tabJul" onclick="renderSpend('jul')">Jul</button>
+    </div>
+    <div class="spend-head">
+      <span class="spend-tot num" id="spendTot"></span>
+      <span class="spend-lbl" id="spendLbl"></span>
+    </div>
+    <div class="bars" id="spendBars"></div>
+    <div class="buckets" id="spendBuckets"></div>
+    <div class="comment"><b>Macro (Jul):</b> o consumo subiu 14%, mas a leitura muda quando se separa o que é hábito do que é decisão. <b>Compras-Casa quase dobrou</b> (+70%, sofá + calhas) e Casa-Serviços triplicou (+209%, mão de obra do telhado) — juntas, R$ 6,8k que não voltam em agosto. Do outro lado, Pessoas-Pagamentos caiu pela metade (−50%) e saiu do topo pela primeira vez em três meses. Mercado subiu 60% e Alimentação Fora 20%: somadas dão R$ 2,4k, ainda 20% abaixo de maio, mas é a linha pra vigiar em agosto.</div>
+    <div class="comment"><b>Lifestyle (Jul):</b> o número mais silencioso do mês — <b>R$ 5.907 contra R$ 5.899 em junho, +0,1%</b>. Praticamente o mesmo real, num mês em que o consumo total subiu 14%. A participação caiu de 32,6% pra 28,6%. Assinaturas seguem no terceiro mês de queda (−13%), e a Apple continua sendo a maior alavanca aberta: R$ 270 diluídos em seis cobranças separadas, ainda sem auditoria. Cannabis (+21%) e Compras Online (+25%) subiram; Loja Física devolveu 71% do pico de junho.</div>
+  </section>
+
+  <!-- 08 MOVIMENTOS -->
+  <section>
+    <div class="sec-h"><span class="sec-n">08</span><h2>Movimentos do mês — planejado × realizado</h2></div>
+    <div class="mv"><div class="l"><div class="t">Aporte Reserva de Emergência</div><div class="d">Planejado R$ 2.800 · executado integral em 15/07</div></div><div style="display:flex;align-items:center;gap:10px"><span class="pv">100%</span><span class="v in num">+R$ 2.800,00</span></div></div>
+    <div class="mv"><div class="l"><div class="t">Aporte Kanna Fund</div><div class="d">Planejado R$ 2.000 · executado integral</div></div><div style="display:flex;align-items:center;gap:10px"><span class="pv">100%</span><span class="v in num">+R$ 2.000,00</span></div></div>
+    <div class="mv"><div class="l"><div class="t">Aporte Caixinha Viagem</div><div class="d">Planejado R$ 1.200 · executado integral em 15/07</div></div><div style="display:flex;align-items:center;gap:10px"><span class="pv">100%</span><span class="v in num">+R$ 1.200,00</span></div></div>
+    <div class="mv"><div class="l"><div class="t">Bônus da Mari → fatura do cartão</div><div class="d">Entrada não prevista em 07/07 · zerou a fatura de julho</div></div><span class="v in num">+R$ 3.586,16</span></div>
+    <div class="mv"><div class="l"><div class="t">Antecipação da fatura do Luís</div><div class="d">Fatura de 03/08 paga em 25/07 · encurta o carryover</div></div><span class="v out num">−R$ 4.509,23</span></div>
+    <div class="mv"><div class="l"><div class="t">Pagamento Empréstimo Mãe</div><div class="d">Parcela 7/25 em 25/07 · saldo devedor R$ 39.035,42</div></div><span class="v out num">−R$ 2.000,00</span></div>
+    <div class="mv"><div class="l"><div class="t">Compra do sofá</div><div class="d">R$ 2.500 débito + R$ 2.000 iFood + R$ 300 frete · sem parcelar</div></div><span class="v out num">−R$ 4.800,00</span></div>
+    <div class="mv"><div class="l"><div class="t">Telhado — 2ª fase</div><div class="d">Calhas R$ 800 + 1ª metade da mão de obra R$ 900</div></div><span class="v out num">−R$ 1.700,00</span></div>
+    <div class="mv"><div class="l"><div class="t">Cripto Binance</div><div class="d">Mês de lado — sem aporte</div></div><span class="v neu num">+R$ 101</span></div>
+    <p class="mv-note">Segundo mês do comparativo <strong>planejado × realizado</strong>: R$ 6.000 planejados, <strong>R$ 6.000 executados — 100%</strong>. Fora do plano, julho teve dois movimentos grandes e deliberados (sofá e telhado) e dois que aceleraram o desendividamento (bônus da Mari na fatura, antecipação da fatura do Luís).</p>
+  </section>
+
+  <!-- 09 PLANO -->
+  <section>
+    <div class="sec-h"><span class="sec-n">09</span><h2>Posição no Plano 12 Meses</h2></div>
+    <div class="plan">
+      <div class="ph"><div class="per">Mai / 26 · Mês 0</div><div class="nm">Setup &amp; Baseline</div><div class="ap num">~R$ 6k</div><div class="apl">aporte antecipado</div></div>
+      <div class="ph here"><span class="here-tag">● Você está aqui</span><div class="per">Jun – Ago / 26</div><div class="nm">Fase 1 · Estabilização</div><div class="ap num">R$ 6.000</div><div class="apl">por mês</div></div>
+      <div class="ph"><div class="per">Set / 26 – Fev / 27</div><div class="nm">Fase 2 · Aceleração</div><div class="ap num">R$ 8.000</div><div class="apl">por mês</div></div>
+      <div class="ph"><div class="per">Mar – Mai / 27</div><div class="nm">Fase 3 · Consolidação</div><div class="ap num">R$ 10.000</div><div class="apl">por mês</div></div>
+    </div>
+    <p class="plan-note">Julho fechou o <strong>Mês 2 com 100% do plano executado</strong>. Agosto é o <strong>último mês da Fase 1</strong> — mesma distribuição de R$ 6k. Depois vem a <strong>revisão trimestral de 31/ago/26</strong>, que calibra a transição pra Fase 2 (R$ 8k/mês) e depende do aumento de receita projetado.</p>
+  </section>
+
+  <!-- 10 INCONSISTÊNCIAS -->
+  <section>
+    <div class="sec-h"><span class="sec-n">10</span><h2>Inconsistências detectadas</h2></div>
+    <div class="inc"><span class="pill ok">Resolvido</span><div class="tx"><b>Reserva Kanna Fund — 3 inconsistências:</b> a Conta Vinculada apontava pra Caixinha Reserva de Emergência (o destino real dos aportes é o Caixa PJ Nubank), o Status seguia "Não iniciado" com R$ 6.000 já aportados, e um Snapshot de Saldo de 23/05 estava vinculado por relation inflando o Saldo Atual (fórmula flow-based) em R$ 2.000. Tudo corrigido em 01/08.</div></div>
+    <div class="inc"><span class="pill ok">Resolvido</span><div class="tx"><b>Jun/26 consolidado Final:</b> a fatura fechada do Luís (11/06–25/07) foi conferida contra os agregados de junho e não trouxe nenhuma transação nova — os agregados já tinham sido montados com a fatura aberta. O dashboard de junho permanece válido, sem regeração.</div></div>
+    <div class="inc"><span class="pill ok">Resolvido</span><div class="tx"><b>Renda sem lançamento desde 14/04:</b> Mai, Jun e Jul/26 estavam sem nenhum registro de Renda, o que distorcia a análise de fluxo (não os saldos, que são snapshot-based). Jul/26 lançada (R$ 25.586,16) e o registro retomado como parte padrão do Mensal. Mai e Jun ficam como gap assumido por decisão registrada.</div></div>
+    <div class="inc"><span class="pill at">Atenção</span><div class="tx"><b>Cripto com preços de datas mistas:</b> só o BTC foi atualizado ao vivo em 01/08 (R$ 321.031, cruzado em duas fontes). ETH, LTC e ADA seguem nos preços de 19/07 — as páginas BRL do CoinGecko voltaram com cache de 06/06 e 06/07 e nenhum fallback deu cotação fresca. Terceira rodada seguida com o problema; a fonte canônica está em revisão (defasagem estimada &lt; R$ 100).</div></div>
+    <div class="inc"><span class="pill at">Atenção</span><div class="tx"><b>Handoff Doc da rotina com regra de PFL desatualizada:</b> o documento de referência ainda instrui "sempre subtrair R$ 620k", regra corrigida no prompt em 06/06/26 (o campo do Notion já exclui o físico desde 31/05). Risco de subtração dupla numa execução futura — pendente alinhar o Handoff.</div></div>
+    <div class="inc"><span class="pill at">Atenção</span><div class="tx"><b>PFL Jan–Mar na régua antiga:</b> os Checkpoints de Jan–Mar ainda guardam o PFL com físico; a série do gráfico usa valores ajustados manualmente. Backfill pendente pra padronizar a coluna no DB.</div></div>
+    <div class="inc"><span class="pill at">Atenção</span><div class="tx"><b>Agregados Jan–Abr:</b> a quebra por categoria só existe de Mai/26 em diante — abas Jan–Abr seguem desativadas.</div></div>
+    <div class="inc"><span class="pill inf">Info</span><div class="tx"><b>Definição de "gasto total":</b> o Resumo do checkpoint cita R$ 22.645,83 incluindo a parcela do Empréstimo Mãe; este dashboard usa consumo puro — R$ 20.645,83 — conforme a convenção de buckets.</div></div>
+    <div class="inc"><span class="pill inf">Info</span><div class="tx"><b>Fatura Cartão Luís de Ago instanciada com R$ 0:</b> consequência da antecipação em 25/07, não erro de dado. A próxima fatura dele só vence em 03/09.</div></div>
+    <div class="inc"><span class="pill inf">Info</span><div class="tx"><b>Caixa CC caiu 58%</b> (R$ 6.729 → R$ 2.853), abaixo do colchão de carryover de ~R$ 5.835 que a régua pede. Neutralizado neste ciclo porque a fatura de agosto já está paga — mas é a linha a observar no fechamento de agosto.</div></div>
+    <div class="inc"><span class="pill inf">Info</span><div class="tx"><b>Quota de queries SQL do Notion esgotada</b> durante o fechamento mensal. Os dados foram coletados via fetch individual das páginas, sem perda — mas a limitação já apareceu duas vezes seguidas.</div></div>
+  </section>
+
+  <footer>Gerado em 1º de agosto de 2026 · referência Julho/26 (Mês 2) · Finanças Casa — Luís &amp; Mari</footer>
+
+</div>
+
+<script>
+const BRL = v => 'R$ ' + Math.round(v).toLocaleString('pt-BR');
+const teal='#0F766E', ink2='#3D4148', amber='#B45309', line='#E8E5DD', ink4='#9CA3AF';
+
+// 02 — Evolução
+new Chart(document.getElementById('evoChart'), {
+  type:'line',
+  data:{
+    labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul'],
+    datasets:[
+      {label:'Patr. Total', data:[525800,515301,515493,521475,537369,541469,549414], borderColor:ink4, backgroundColor:'rgba(156,163,175,.08)', yAxisID:'y', tension:.35, borderWidth:2, pointRadius:3, pointBackgroundColor:ink4, fill:true},
+      {label:'PFL', data:[-94200,-104699,-104507,-98525,-82631,-78531,-70586], borderColor:teal, backgroundColor:'rgba(15,118,110,.07)', yAxisID:'y1', tension:.35, borderWidth:2.5, pointRadius:3.5, pointBackgroundColor:teal, fill:true}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{position:'top',align:'end',labels:{font:{family:'Geist',size:12},usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:16,color:ink2}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+BRL(c.parsed.y)}}},
+    scales:{
+      y:{position:'left',grid:{color:line},ticks:{font:{family:'Geist',size:11},color:ink4,callback:v=>'R$ '+(v/1000)+'k'}},
+      y1:{position:'right',grid:{drawOnChartArea:false},ticks:{font:{family:'Geist',size:11},color:teal,callback:v=>(v/1000)+'k'}},
+      x:{grid:{display:false},ticks:{font:{family:'Geist',size:12},color:ink2}}
+    }}
+});
+
+// 04 — Dívidas
+new Chart(document.getElementById('debtChart'), {
+  type:'bar',
+  data:{
+    labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul'],
+    datasets:[
+      {label:'Cartões', data:[20831,24711,22776,18420,18330,20235,14344], backgroundColor:teal, borderRadius:3, stack:'d'},
+      {label:'Empréstimo Mãe', data:[48480,46945,45394,43828,42246,40649,39035], backgroundColor:amber, borderRadius:3, stack:'d'},
+      {label:'Kanna', data:[60000,60000,60000,60000,60000,60000,60000], backgroundColor:ink2, borderRadius:3, stack:'d'}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{position:'top',align:'end',labels:{font:{family:'Geist',size:12},usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:16,color:ink2}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+BRL(c.parsed.y)}}},
+    scales:{
+      y:{stacked:true,grid:{color:line},ticks:{font:{family:'Geist',size:11},color:ink4,callback:v=>'R$ '+(v/1000)+'k'}},
+      x:{stacked:true,grid:{display:false},ticks:{font:{family:'Geist',size:12},color:ink2}}
+    }}
+});
+
+// 07 — Gastos (Mai + Jun)
+const spendData = {
+  jul:{
+    tot:'R$ 20.645,83',
+    lbl:'Total gasto · Jul/26 · 176 transações · +14,0% vs Jun',
+    spend:[
+      {n:'Compras-Casa', s:'12 tx · sofá, calhas, Leroy', v:5038.12, b:'ess'},
+      {n:'Casa-Serviços', s:'11 tx · mão de obra telhado, Patrick', v:1756.00, b:'ess'},
+      {n:'Pessoas-Pagamentos', s:'4 tx · advogado, guardinha', v:1743.39, b:'oth'},
+      {n:'Carro', s:'4 tx · mecânica, Detran, seguro', v:1692.52, b:'ess'},
+      {n:'Alimentação Fora', s:'33 tx · restaurantes, iFood', v:1608.36, b:'life'},
+      {n:'Transporte', s:'45 tx · Uber, pedágios, ônibus', v:1262.89, b:'ess'},
+      {n:'Saúde', s:'2 tx · Sta Casa (2 boletos)', v:1144.41, b:'ess'},
+      {n:'Cannabis', s:'5 tx', v:1005.00, b:'life'},
+      {n:'Compras Online', s:'11 tx · ML, Amazon, Shopee', v:931.45, b:'life'},
+      {n:'Assinaturas Digitais', s:'25 tx · Claude, Apple, Vivo', v:913.24, b:'life'},
+      {n:'Casa-Utilities', s:'3 tx · EDP, Claro, Sabesp', v:874.46, b:'ess'},
+      {n:'Mercado', s:'6 tx · Shibata, frutaria', v:824.95, b:'ess'},
+      {n:'Bem-estar', s:'6 tx · Magrass, academia, farmácias', v:755.22, b:'life'},
+      {n:'Viagem', s:'4 tx · Airbnb, hospedagem', v:425.62, b:'life'},
+      {n:'Loja Física', s:'2 tx · Kalunga, Decathlon', v:268.38, b:'life'},
+      {n:'Pet', s:'2 tx · Popular Pet', v:206.82, b:'ess'},
+      {n:'Impostos', s:'1 tx · Contabilizei', v:195.00, b:'ess'}
+    ],
+    buckets:[
+      {h:'Essenciais', c:'#3D4148', pc:'62,9%', ab:'R$ 12.995,17', dl:'▲ +50,3% vs Jun', dc:'var(--red)'},
+      {h:'Lifestyle', c:'#0F766E', pc:'28,6%', ab:'R$ 5.907,27', dl:'▲ +0,1% vs Jun', dc:'var(--ink-3)'},
+      {h:'Outros', c:'#B45309', pc:'8,4%', ab:'R$ 1.743,39', dl:'▼ −51,1% vs Jun', dc:'var(--green)'}
+    ]
+  },
+  jun:{
+    tot:'R$ 18.109,84',
+    lbl:'Total gasto · Jun/26 · 162 transações · −23,2% vs Mai',
+    spend:[
+      {n:'Pessoas-Pagamentos', s:'13 tx · advogado, Pix', v:3524.63, b:'oth'},
+      {n:'Compras-Casa', s:'10 tx · telhado, parcelas', v:2970.99, b:'ess'},
+      {n:'Alimentação Fora', s:'19 tx · bares, iFood', v:1342.28, b:'life'},
+      {n:'Transporte', s:'56 tx · Uber, 99, pedágios', v:1285.95, b:'ess'},
+      {n:'Carro', s:'3 tx · mecânica, seguro', v:1129.91, b:'ess'},
+      {n:'Saúde', s:'4 tx · Sta Casa, equoterapia', v:1071.46, b:'ess'},
+      {n:'Assinaturas Digitais', s:'14 tx · Claude, Apple', v:1051.00, b:'life'},
+      {n:'Loja Física', s:'6 tx · Constance, parcelas', v:939.21, b:'life'},
+      {n:'Cannabis', s:'4 tx', v:830.00, b:'life'},
+      {n:'Casa-Utilities', s:'3 tx · EDP, Claro, Sabesp', v:793.22, b:'ess'},
+      {n:'Compras Online', s:'9 tx · ML, Amazon', v:745.61, b:'life'},
+      {n:'Bem-estar', s:'4 tx · Magrass, academia', v:622.06, b:'life'},
+      {n:'Casa-Serviços', s:'5 tx · Patrick, José Cicero', v:569.00, b:'ess'},
+      {n:'Mercado', s:'4 tx · Carrefour', v:515.07, b:'ess'},
+      {n:'Viagem', s:'2 tx · Airbnb', v:342.41, b:'life'},
+      {n:'Pet', s:'3 tx · Poli Pet', v:309.25, b:'ess'},
+      {n:'Outros', s:'2 tx · IOF rotativo, doação', v:41.79, b:'oth'},
+      {n:'Lazer', s:'1 tx', v:26.00, b:'life'}
+    ],
+    buckets:[
+      {h:'Essenciais', c:'#3D4148', pc:'47,7%', ab:'R$ 8.644,85', dl:'▼ −10,1% vs Mai', dc:'var(--green)'},
+      {h:'Lifestyle', c:'#0F766E', pc:'32,6%', ab:'R$ 5.898,57', dl:'▼ −38,2% vs Mai', dc:'var(--green)'},
+      {h:'Outros', c:'#B45309', pc:'19,7%', ab:'R$ 3.566,42', dl:'▼ −19,6% vs Mai', dc:'var(--green)'}
+    ]
+  },
+  mai:{
+    tot:'R$ 23.590,70',
+    lbl:'Total gasto · Mai/26 · 287 transações',
+    spend:[
+      {n:'Pessoas-Pagamentos', s:'35 tx · advogado, Pix', v:4433.83, b:'oth'},
+      {n:'Alimentação Fora', s:'33 tx · iFood, restaurantes', v:3032.24, b:'life'},
+      {n:'Mercado', s:'20 tx · Carrefour, Shibata', v:1956.22, b:'ess'},
+      {n:'Compras-Casa', s:'17 tx · Leroy, Havan', v:1896.47, b:'ess'},
+      {n:'Assinaturas Digitais', s:'46 tx · Claude, Apple, Disney', v:1478.93, b:'life'},
+      {n:'Saúde', s:'10 tx · Sta Casa, farmácias', v:1396.68, b:'ess'},
+      {n:'Carro', s:'11 tx · seguro, combustível', v:1387.07, b:'ess'},
+      {n:'Compras Online', s:'16 tx · ML, Shopee, Amazon', v:1385.03, b:'life'},
+      {n:'Viagem', s:'6 tx · Airbnb, hotéis', v:1351.14, b:'life'},
+      {n:'Cannabis', s:'7 tx', v:1113.00, b:'life'},
+      {n:'Transporte', s:'41 tx · Uber, 99, ônibus', v:928.16, b:'ess'},
+      {n:'Casa-Utilities', s:'6 tx · EDP, Claro, Sabesp', v:894.35, b:'ess'},
+      {n:'Impostos', s:'11 tx · prefeitura, contab.', v:763.38, b:'ess'},
+      {n:'Bem-estar', s:'4 tx · academia, barbearia', v:618.06, b:'life'},
+      {n:'Pet', s:'4 tx · Poli Pet', v:395.00, b:'ess'},
+      {n:'Loja Física', s:'5 tx · Centauro, Decathlon', v:328.87, b:'life'},
+      {n:'Lazer', s:'5 tx · quermesse, Sympla', v:232.27, b:'life'}
+    ],
+    buckets:[
+      {h:'Essenciais', c:'#3D4148', pc:'40,8%', ab:'R$ 9.617,33', dl:'', dc:''},
+      {h:'Lifestyle', c:'#0F766E', pc:'40,4%', ab:'R$ 9.539,54', dl:'', dc:''},
+      {h:'Outros', c:'#B45309', pc:'18,8%', ab:'R$ 4.433,83', dl:'', dc:''}
+    ]
+  }
+};
+
+function renderSpend(m){
+  const d = spendData[m];
+  document.getElementById('spendTot').textContent = d.tot;
+  document.getElementById('spendLbl').textContent = d.lbl;
+  const max = Math.max(...d.spend.map(x=>x.v));
+  document.getElementById('spendBars').innerHTML = d.spend.map(x=>`
+    <div class="sb ${x.b}">
+      <div class="nm">${x.n}<small>${x.s}</small></div>
+      <div class="sb-bar"><i style="width:${(x.v/max*100).toFixed(1)}%"></i></div>
+      <div class="amt num">${x.v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+    </div>`).join('');
+  document.getElementById('spendBuckets').innerHTML = d.buckets.map(b=>`
+    <div class="bk"><div class="h"><i style="background:${b.c}"></i>${b.h}</div><div class="pc num">${b.pc}</div><div class="ab num">${b.ab}</div>${b.dl?`<div class="dl num" style="color:${b.dc}">${b.dl}</div>`:''}</div>`).join('');
+  ['Mai','Jun','Jul'].forEach(k=>{
+    const el = document.getElementById('tab'+k);
+    if(el) el.classList.toggle('active', m===k.toLowerCase());
+  });
+}
+renderSpend('jul');
+</script>
+</body>
+</html>
